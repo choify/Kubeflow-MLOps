@@ -1,4 +1,5 @@
 [core]
     remote = s3remote
+    autostage = true
 ['remote "s3remote"']
     url = s3://hajong-data/data/
