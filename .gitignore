@@ -273,4 +273,18 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+### Data ###
+*.csv
+*.dat
+*.efx
+*.gbr
+*.key
+*.pps
+*.ppt
+*.pptx
+*.sdf
+*.tax2010
+*.vcf
+*.xml
+
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,python,visualstudiocode,jupyternotebooks
