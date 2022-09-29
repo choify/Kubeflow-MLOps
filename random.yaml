@@ -3,7 +3,7 @@ apiVersion: kubeflow.org/v1beta1
 kind: Experiment
 metadata:
   namespace: kubeflow-user-example-com
-  name: random3
+  name: random
 spec:
   objective:
     type: maximize
