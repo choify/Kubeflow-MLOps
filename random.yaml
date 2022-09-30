@@ -14,7 +14,7 @@ spec:
   algorithm:
     algorithmName: random
   parallelTrialCount: 1
-  maxTrialCount: 1
+  maxTrialCount: 2
   maxFailedTrialCount: 3
   parameters:
     - name: lr
