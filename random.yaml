@@ -3,7 +3,7 @@ apiVersion: kubeflow.org/v1beta1
 kind: Experiment
 metadata:
   namespace: kubeflow-user-example-com
-  name: random7
+  name: random8
 spec:
   objective:
     type: maximize
@@ -14,7 +14,7 @@ spec:
   algorithm:
     algorithmName: random
   parallelTrialCount: 1
-  maxTrialCount: 2
+  maxTrialCount: 1
   maxFailedTrialCount: 3
   parameters:
     - name: lr
@@ -63,14 +63,36 @@ spec:
                   - "--num-layers=${trialParameters.numberLayers}"
                   - "--optimizer=${trialParameters.optimizer}"
             restartPolicy: Never
+# ---
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   generateName: app-slack-notification-
+#   annotations:
+#     argocd.argoproj.io/hook: PostSync
+#     argocd.argoproj.io/hook-delete-policy: HookSucceeded
+# spec:
+#   template:
+#     spec:
+#       containers:
+#         - name: slack-notification
+#           image: curlimages/curl
+#           command:
+#             - "curl"
+#             - "-X"
+#             - "POST"
+#             - "--data-urlencode"
+#             - 'payload={"channel": "#somechannel", "username": "hello", "text": "App Sync succeeded", "icon_emoji": ":ghost:"}'
+#             - "https://hooks.slack.com/services/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"
+#       restartPolicy: Never
+#   backoffLimit: 2
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
   generateName: app-slack-notification-
   annotations:
-    argocd.argoproj.io/hook: PostSync
-    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+    katib.kubeflow.org/experiment: random8
 spec:
   template:
     spec:
