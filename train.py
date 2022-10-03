@@ -16,6 +16,7 @@ BUCKET_NAME = "hajong-data"
 object_key = 'data/6c/5869cfe7c8f8efb7ed2c840b5bdb02'
 object_ = s3_client.get_object(Bucket=BUCKET_NAME, Key=object_key)
 df = pd.read_csv(io.BytesIO(object_["Body"].read()))
+print(df.tail())
 
 
 drop_cols = ["Name", "Cabin", "Ticket", "PassengerId"]
