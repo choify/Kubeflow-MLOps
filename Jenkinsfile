@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKERHUB_USERNAME = "hahajong"
-        APP_NAME = "gitops-demo-app"
+        APP_NAME = "startup-pj-demo"
         IMAGE_TAG = "${BUILD_NUMBER}"
         IMAGE_NAME = "${DOCKERHUB_USERNAME}" + "/" + "${APP_NAME}"
         REGISTRY_CREDS = 'dockerhub'
@@ -17,9 +17,16 @@ pipeline {
         }
         stage('Checkout SCM'){
             steps {
-                git credentialsId: '1b599192-18cc-450f-83fd-5464264daa7e', 
-                url: 'git@github.com:Hahajongsoo/gitops-demo.git',
-                branch:'dev'
+                git credentialsId: '555f0ca5-f98e-44ea-a862-2b9bd5c82f6b', 
+                url: 'git@github.com:Hahajongsoo/startup-progject-demo.git',
+                branch:'master'
+            }
+        }
+        stage('Updating Train.py file'){
+            steps {
+                sh "cat train.py"
+                sh "bash ./change-data-path.sh"
+                sh "cat train.py"
             }
         }
         stage('Build Docker Image'){
@@ -45,24 +52,17 @@ pipeline {
                 sh "docker rmi ${IMAGE_NAME}:latest"
             }
         }
-        stage('Updating Kubernetes deployment file'){
-            steps {
-                sh "cat deployment.yml"
-                sh "sed -i 's/${APP_NAME}.*/${APP_NAME}:${IMAGE_TAG}/g' deployment.yml"
-                sh "cat deployment.yml"
-            }
-        }
-        stage('Push the changed deployment file to Git'){
+        stage('Push the changed train.py file to Git'){
             steps {
                 script {
                     sh """
                     eval "\$(ssh-agent -s)"
-                    ssh-add /var/lib/jenkins/.ssh/github_jenkins
+                    ssh-add /var/lib/jenkins/.ssh/id_rsa_deploy-test
                     git config --global user.name "Hahajongsoo"
                     git config --global user.email "gkwhdtn95051@gmail.com"
-                    git add deployment.yml
-                    git commit -m 'Updated the deployment.yml'
-                    git push git@github.com:Hahajongsoo/gitops-demo.git dev"""
+                    git add train.py
+                    git commit -m 'modifying train.py'
+                    git push git@github.com:Hahajongsoo/startup-progject-demo.git master"""
                 }
             }
         }

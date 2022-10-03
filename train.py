@@ -2,7 +2,7 @@ import boto3
 import pandas as pd
 import io
 from sklearn.preprocessing import LabelEncoder
-from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import train_test_split
 
@@ -13,7 +13,7 @@ s3_client = boto3.client(
     aws_secret_access_key="XgFL6mZmzjFT/8YXNmI22N7tMNLyL21S/EwePh50",
 )
 BUCKET_NAME = "hajong-data"
-object_key = data/9b/75560db14fbe6a5e86cb55f72faf70
+object_key = "data/9b/75560db14fbe6a5e86cb55f72faf70"
 object_ = s3_client.get_object(Bucket=BUCKET_NAME, Key=object_key)
 df = pd.read_csv(io.BytesIO(object_["Body"].read()))
 
@@ -29,9 +29,10 @@ df["Embarked"] = encoder.fit_transform(df[["Embarked"]])
 y = df.pop("Survived")
 X = df
 train_X, valid_X, train_y, valid_y = train_test_split(
-    X, y, test_size=0.2, random_state=42
+    X, y.values.ravel(), test_size=0.2, random_state=42
 )
-clf = SVC()
+clf = RandomForestClassifier()
 clf.fit(train_X, train_y)
 pred = clf.predict_proba(valid_X)
-roc_auc_score(valid_y, pred[:, 1])
+score = roc_auc_score(valid_y, pred[:, 1])
+print(score)
