@@ -1,9 +1,5 @@
 [core]
-    remote = s3remote
+    remote = myremote
     autostage = true
-[cache]
-    dir = /home/shared/dvc-cache
-    shared = group
-    type = symlink
-['remote "s3remote"']
-    url = s3://hajong-data/data/
+['remote "myremote"']
+    url = s3://hajong-data/data
