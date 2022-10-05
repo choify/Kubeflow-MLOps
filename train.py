@@ -13,7 +13,7 @@ s3_client = boto3.client(
     aws_secret_access_key="XgFL6mZmzjFT/8YXNmI22N7tMNLyL21S/EwePh50",
 )
 BUCKET_NAME = "hajong-data"
-object_key = 'data/6c/5869cfe7c8f8efb7ed2c840b5bdb02'
+object_key = 'data/e1/cdf7e29715ff5da018d5d1c2445bdd'
 object_ = s3_client.get_object(Bucket=BUCKET_NAME, Key=object_key)
 df = pd.read_csv(io.BytesIO(object_["Body"].read()))
 print(df.tail())
