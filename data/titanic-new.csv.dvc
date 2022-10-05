@@ -1,0 +1,4 @@
+outs:
+- md5: fc18403323ed3cf09d4f1207b5a7a9f9
+  size: 59054
+  path: titanic-new.csv
