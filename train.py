@@ -13,7 +13,7 @@ s3_client = boto3.client(
     aws_secret_access_key="XgFL6mZmzjFT/8YXNmI22N7tMNLyL21S/EwePh50",
 )
 BUCKET_NAME = "hajong-data"
-object_key = 'data/e1/cdf7e29715ff5da018d5d1c2445bdd'
+object_key = "data/e1/cdf7e29715ff5da018d5d1c2445bdd"
 object_ = s3_client.get_object(Bucket=BUCKET_NAME, Key=object_key)
 df = pd.read_csv(io.BytesIO(object_["Body"].read()))
 print(df.tail())
@@ -36,4 +36,5 @@ clf = RandomForestClassifier()
 clf.fit(train_X, train_y)
 pred = clf.predict_proba(valid_X)
 score = roc_auc_score(valid_y, pred[:, 1])
+print(score)
 print(score)
