@@ -1,9 +1,10 @@
 import argparse
 import xgboost as xgb
 from sklearn.model_selection import train_test_split
-import mlflow
 
-from utils import load_data_from_s3, preprocessing, reduce_mem_usage
+# import mlflow
+
+from utils import load_data, preprocessing, reduce_mem_usage
 
 
 def parse_args():
@@ -12,12 +13,12 @@ def parse_args():
 
     parser.add_argument("--eta", type=float, default=0.3)
     parser.add_argument("--gamma", type=float, default=0)
-    parser.add_argument("--max_depth", type=int, default=6)
-    parser.add_argument("--min_child_weight", type=int, default=1)
+    parser.add_argument("--max-depth", type=int, default=6)
+    parser.add_argument("--min-child-weight", type=float, default=1)
     parser.add_argument("--subsample", type=float, default=1.0)
-    parser.add_argument("--colsample_bytree", type=float, default=1.0)
-    parser.add_argument("--reg_alpha", type=float, default=0)
-    parser.add_argument("--reg_lambda", type=float, default=1.0)
+    parser.add_argument("--colsample-bytree", type=float, default=1.0)
+    parser.add_argument("--reg-alpha", type=float, default=0)
+    parser.add_argument("--reg-lambda", type=float, default=1.0)
 
     args = parser.parse_args()
 
@@ -27,7 +28,7 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
 
-    data = reduce_mem_usage(preprocessing(load_data_from_s3()))
+    data = reduce_mem_usage(preprocessing(load_data()))
     y = data.pop("fare_amount")
     X = data.copy()
     del data
@@ -54,7 +55,7 @@ if __name__ == "__main__":
     bst = xgb.train(
         param,
         dtrain,
-        num_boost_round=1500,
-        evals=[(dtrain, "dtrain"), (dvalid, "dvalid")],
+        num_boost_round=2000,
+        evals=[(dtrain, "Train"), (dvalid, "Validation")],
         early_stopping_rounds=100,
     )
