@@ -25,7 +25,7 @@ def load_data_from_s3() -> pd.DataFrame:
     object_ = s3_client.get_object(Bucket=BUCKET_NAME, Key=object_key)
     print(
         "*" * 40,
-        f"Bucket name:{BUCKET_NAME} \n Object key: {object_key}",
+        f"Bucket name: {BUCKET_NAME} \nObject key: {object_key}",
         "*" * 40,
         sep="\n",
     )
