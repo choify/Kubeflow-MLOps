@@ -8,3 +8,5 @@ WORKDIR /app
 COPY data/yellow_tripdata_2017-01.parquet.dvc .
 COPY xgb.py .
 COPY utils.py .
+RUN sed -i '9a\import datetime' /usr/local/lib/python3.7/site-packages/xgboost/callback.py
+RUN sed -i '498a\            msg = datetime.datetime.now().isoformat("T")[:-7] + "z\t" + msg' /usr/local/lib/python3.7/site-packages/xgboost/callback.py
