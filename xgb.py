@@ -55,7 +55,7 @@ if __name__ == "__main__":
     bst = xgb.train(
         param,
         dtrain,
-        num_boost_round=20,
+        num_boost_round=2000,
         evals=[(dtrain, "Train"), (dvalid, "Validation")],
-        # early_stopping_rounds=20,
+        early_stopping_rounds=100,
     )
