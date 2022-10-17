@@ -1,5 +1,5 @@
-name: Python application
-
+name: Build Dockerfile For Katib
+run-name: Build Dockerfile and create PR to dev
 on:
   push:
     branches: [experiment]
