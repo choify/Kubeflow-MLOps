@@ -25,4 +25,5 @@ jobs:
       - name: Create Pull Request to dev
         uses: peter-evans/create-pull-request@v4
         with:
+          base: experiment
           branch: dev
