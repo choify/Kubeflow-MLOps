@@ -1,6 +1,10 @@
-FROM python:3.9-slim-buster
+FROM python:3.7-slim-buster
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends build-essential libpq-dev
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN python -m pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 WORKDIR /app
-COPY train.py .
-CMD ["python", "train.py"]
+COPY data/yellow_tripdata_2017-01.parquet.dvc .
+COPY xgb.py .
+COPY utils.py .

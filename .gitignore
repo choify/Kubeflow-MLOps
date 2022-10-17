@@ -286,5 +286,6 @@ $RECYCLE.BIN/
 *.tax2010
 *.vcf
 *.xml
+*.parquet
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,python,visualstudiocode,jupyternotebooks
