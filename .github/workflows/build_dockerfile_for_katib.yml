@@ -23,7 +23,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Create Pull Request to dev
-        uses: peter-evans/create-pull-request@v4
-        with:
-          base: experiment
-          branch: dev
+        run: gh pr create -B dev -H experiment --title 'Merge experiment into dev' --body 'Created by Github action'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
