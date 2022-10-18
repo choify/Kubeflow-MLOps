@@ -1,4 +1,4 @@
 outs:
-- md5: 7653e44f45571366c79f334d997840c3
-  size: 181863854
+- md5: 44ecfe2846cfc29031b20e6d080340b9
+  size: 181875867
   path: yellow_tripdata_2017-01.parquet
