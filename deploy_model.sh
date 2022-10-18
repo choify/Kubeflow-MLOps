@@ -6,6 +6,10 @@ if [[ $experiment_name =~ $EXPERIMENT_REGEX ]]; then
     set -o pipefail -e
     params=$(kubectl get experiment $experiment_name -n kubeflow-user-example-com -o jsonpath={.status.currentOptimalTrial.parameterAssignments}  | jq '.')
     set +o pipefail +e
+    git checkout dev
+    git pull origin dev
+    rm .dvc/cache -rf
+    dvc pull
     declare -A params_dict
     x=0
     while [ $x -le 7 ];
@@ -30,10 +34,7 @@ if [[ $experiment_name =~ $EXPERIMENT_REGEX ]]; then
 
     sed -i "s/$old_run_id/$new_run_id/" seldon_deployment/mlflow-model-serving.yaml
 
-    git checkout dev
-    git add seldon_deployment/mlflow-model-serving.yaml
-    git commit -m "chage model path"
-    git push origin master
+    git add seldon_deployment/mlflow-model-serving.yaml && git commit -m "chage model path" && git push origin dev
 else
     echo "execute with right experiment name !!!"
     exit
