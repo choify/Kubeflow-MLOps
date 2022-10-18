@@ -20,7 +20,7 @@ def load_data_from_s3() -> pd.DataFrame:
     s3_client = boto3.client(
         "s3",
     )
-    BUCKET_NAME = "hajong-data"
+    BUCKET_NAME = "team06"
     object_key = "/".join(["data", md5[:2], md5[2:]])
     object_ = s3_client.get_object(Bucket=BUCKET_NAME, Key=object_key)
     print(
@@ -125,7 +125,7 @@ def rename_model_on_s3() -> None:
     s3_client = boto3.client(
         "s3",
     )
-    BUCKET_NAME = "hajong-data"
+    BUCKET_NAME = "team06"
     old_file_key = "mlflow/mlflow/artifacts/0/" + run_id + "/artifacts/model/model.xgb"
     new_file_key = "mlflow/mlflow/artifacts/0/" + run_id + "/artifacts/model/model.bst"
     s3_client.copy_object(
