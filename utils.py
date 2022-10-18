@@ -13,7 +13,7 @@ def load_data_from_s3() -> pd.DataFrame:
     Returns:
         loaded data as pandas.DataFrame
     """
-    with open("yellow_tripdata_2017-01.parquet.dvc", "r") as f:
+    with open("data/yellow_tripdata_2017-01.parquet.dvc", "r") as f:
         file = f.readlines()
     md5 = file[1].split(" ")[-1][:-1]
 
@@ -25,7 +25,7 @@ def load_data_from_s3() -> pd.DataFrame:
     object_ = s3_client.get_object(Bucket=BUCKET_NAME, Key=object_key)
     print(
         "*" * 40,
-        f"Bucket name:{BUCKET_NAME} \n Object key: {object_key}",
+        f"Bucket name: {BUCKET_NAME} \nObject key: {object_key}",
         "*" * 40,
         sep="\n",
     )
@@ -119,7 +119,7 @@ def preprocessing(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def rename_model_on_s3() -> None:
-    mlflow_client = MlflowClient("http://localhost:5000")
+    mlflow_client = MlflowClient("http://13.124.36.34:5000/")
     run_info = mlflow_client.search_runs("0")[0]
     run_id = run_info.info.run_id
     s3_client = boto3.client(
