@@ -18,7 +18,7 @@ spec:
               - name: model-initializer
                 image: kfserving/storage-initializer:v0.6.1
                 args:
-                  - "s3://hajong-data/mlflow/mlflow/artifacts/0/2957cdd3b9e94e478b55db8cb184c93b/artifacts/model"
+                  - "s3://hajong-data/mlflow/mlflow/artifacts/0/019cbdbf6a1f4b218831fdbe63914bb1/artifacts/model"
                   - "/mnt/models"
                 volumeMounts:
                   - mountPath: /mnt/models
