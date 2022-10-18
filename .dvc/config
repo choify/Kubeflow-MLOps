@@ -1,5 +1,6 @@
 [core]
-    remote = myremote
+    remote = storage
     autostage = true
-['remote "myremote"']
-    url = s3://hajong-data/data
+['remote "storage"']
+    url = s3://team06/data
+
