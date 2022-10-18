@@ -3,7 +3,6 @@ from sklearn.model_selection import train_test_split
 import xgboost as xgb
 import mlflow
 import mlflow.xgboost
-from mlflow import MlflowClient
 
 from utils import reduce_mem_usage, load_data_from_s3, preprocessing, rename_model_on_s3
 
@@ -51,7 +50,6 @@ if __name__ == "__main__":
     }
     mlflow.set_tracking_uri("http://13.124.36.34:5000/")
     mlflow.set_experiment(experiment_id="0")
-
     with mlflow.start_run():
         mlflow.xgboost.autolog(log_input_examples=True)
         dtrain = xgb.DMatrix(train_X, train_y)
