@@ -4,7 +4,7 @@ import xgboost as xgb
 import mlflow
 import mlflow.xgboost
 
-from utils import reduce_mem_usage, load_data_from_s3, preprocessing, rename_model_on_s3
+from utils import reduce_mem_usage, load_data_from_s3, rename_model_on_s3
 
 
 def parse_args():
@@ -27,8 +27,7 @@ def parse_args():
 
 if __name__ == "__main__":
     args = parse_args()
-    preprocessed_data = preprocessing(load_data_from_s3())
-    data = reduce_mem_usage(preprocessed_data)
+    data = reduce_mem_usage(load_data_from_s3())
     y = data.pop("fare_amount")
     X = data.copy()
     del data

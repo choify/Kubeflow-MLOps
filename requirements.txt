@@ -2,5 +2,4 @@ boto3
 scikit-learn
 pandas
 xgboost
-mlflow
 fastparquet
