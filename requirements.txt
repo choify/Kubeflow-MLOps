@@ -3,3 +3,4 @@ scikit-learn
 pandas
 xgboost
 fastparquet
+mlflow
