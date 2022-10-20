@@ -16,7 +16,7 @@ spec:
               - name: model-initializer-1
                 image: kfserving/storage-initializer:v0.6.1
                 args:
-                  - "s3://team06/mlflow/mlflow/artifacts/0/8ebe06fa9a654ad4b13f4dc8692fc029/artifacts/model"
+                  - "s3://team06/mlflow/mlflow/artifacts/0/280e52c2bc8f44199544c43d9f82970a/artifacts/model"
                   - "/mnt/models/model-1"
                 volumeMounts:
                   - mountPath: /mnt/models/model-1
@@ -28,7 +28,7 @@ spec:
               - name: model-initializer-2
                 image: kfserving/storage-initializer:v0.6.1
                 args:
-                  - "s3://team06/mlflow/mlflow/artifacts/0/c956d6525f1c4ad49a8f1b8918f6be78/artifacts/model"
+                  - "s3://team06/mlflow/mlflow/artifacts/0/7e5191ca58d64151b1362b28ac911b47/artifacts/model"
                   - "/mnt/models/model-2"
                 volumeMounts:
                   - mountPath: /mnt/models/model-2

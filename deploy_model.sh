@@ -9,7 +9,6 @@ if [[ $experiment_name =~ $EXPERIMENT_REGEX ]]; then
     git checkout dev
     git pull origin dev
     rm .dvc/cache -rf
-    dvc pull
     declare -A params_dict
     x=0
     while [ $x -le 7 ];
@@ -34,7 +33,7 @@ if [[ $experiment_name =~ $EXPERIMENT_REGEX ]]; then
 
     sed -i "s/$old_run_id/$new_run_id/" seldon_deployment/mlflow-model-serving.yaml
 
-    git add seldon_deployment/mlflow-model-serving.yaml && git commit -m "chage model path" && git push origin dev
+    git add seldon_deployment/ensemble-model.yaml && git commit -m "chage model path" && git push origin dev
 else
     echo "execute with right experiment name !!!"
     exit

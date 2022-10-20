@@ -13,7 +13,7 @@ def load_data_from_s3() -> pd.DataFrame:
     Returns:
         loaded data as pandas.DataFrame
     """
-    with open("data/yellow_tripdata_2017-01.parquet.dvc", "r") as f:
+    with open("data/train_data.parquet.dvc", "r") as f:
         file = f.readlines()
     md5 = file[1].split(" ")[-1][:-1]
 
@@ -89,6 +89,14 @@ def preprocessing(data: pd.DataFrame) -> pd.DataFrame:
     Returns:
         preporcessed data as pandas.DataFrame
     """
+    data["dayofweek"] = data["tpep_pickup_datetime"].dt.dayofweek
+    data["hour"] = data["tpep_pickup_datetime"].dt.hour
+    data["minute"] = data["tpep_pickup_datetime"].dt.minute
+    ol = data.loc[(data.fare_amount > 500000)].index
+    data.drop(ol, inplace=True)
+    data["drive_time_diff"] = (
+        data["tpep_dropoff_datetime"] - data["tpep_pickup_datetime"]
+    ) / np.timedelta64(1, "m")
     data.drop(
         [
             "VendorID",
@@ -101,19 +109,13 @@ def preprocessing(data: pd.DataFrame) -> pd.DataFrame:
             "total_amount",
             "congestion_surcharge",
             "airport_fee",
+            "RatecodeID",
+            "tpep_dropoff_datetime",
+            "tpep_pickup_datetime",
         ],
         axis=1,
         inplace=True,
     )
-    ol = data.loc[(data.fare_amount > 500000)].index
-    data.drop(ol, inplace=True)
-    data["drive_time_diff"] = (
-        data["tpep_dropoff_datetime"] - data["tpep_pickup_datetime"]
-    ) / np.timedelta64(1, "s")
-    data.drop(columns=["tpep_dropoff_datetime", "tpep_pickup_datetime"], inplace=True)
-    # category_cols = ["RatecodeID", "PULocationID", "DOLocationID", "payment_type"]
-    # for col in category_cols:
-    #     data[col] = data[col].astype("category")
     data.dropna(axis=0, inplace=True)
     return data
 

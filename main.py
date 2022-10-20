@@ -57,9 +57,9 @@ if __name__ == "__main__":
         bst = xgb.train(
             param,
             dtrain,
-            num_boost_round=5,
+            num_boost_round=1500,
             evals=[(dtrain, "Train"), (dvalid, "Validation")],
-            early_stopping_rounds=2,
+            early_stopping_rounds=50,
         )
     with open("run_id.txt", "w") as f:
         new_run_id = mlflow.last_active_run().info.run_id
