@@ -81,45 +81,6 @@ def reduce_mem_usage(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def preprocessing(data: pd.DataFrame) -> pd.DataFrame:
-    """
-    return preprocessed data by using drop cols, making new cols etc.
-    Args:
-        data: data to preprocess
-    Returns:
-        preporcessed data as pandas.DataFrame
-    """
-    data["dayofweek"] = data["tpep_pickup_datetime"].dt.dayofweek
-    data["hour"] = data["tpep_pickup_datetime"].dt.hour
-    data["minute"] = data["tpep_pickup_datetime"].dt.minute
-    ol = data.loc[(data.fare_amount > 500000)].index
-    data.drop(ol, inplace=True)
-    data["drive_time_diff"] = (
-        data["tpep_dropoff_datetime"] - data["tpep_pickup_datetime"]
-    ) / np.timedelta64(1, "m")
-    data.drop(
-        [
-            "VendorID",
-            "store_and_fwd_flag",
-            "extra",
-            "mta_tax",
-            "tip_amount",
-            "tolls_amount",
-            "improvement_surcharge",
-            "total_amount",
-            "congestion_surcharge",
-            "airport_fee",
-            "RatecodeID",
-            "tpep_dropoff_datetime",
-            "tpep_pickup_datetime",
-        ],
-        axis=1,
-        inplace=True,
-    )
-    data.dropna(axis=0, inplace=True)
-    return data
-
-
 def rename_model_on_s3() -> None:
     mlflow_client = MlflowClient("http://13.124.36.34:5000/")
     run_info = mlflow_client.search_runs("0")[0]

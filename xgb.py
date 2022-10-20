@@ -2,9 +2,7 @@ import argparse
 import xgboost as xgb
 from sklearn.model_selection import train_test_split
 
-# import mlflow
-
-from utils import load_data_from_s3, preprocessing, reduce_mem_usage
+from utils import load_data_from_s3, reduce_mem_usage
 
 
 def parse_args():
@@ -28,7 +26,7 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
 
-    data = reduce_mem_usage(preprocessing(load_data_from_s3()))
+    data = reduce_mem_usage(load_data_from_s3())
     y = data.pop("fare_amount")
     X = data.copy()
     del data
@@ -55,7 +53,7 @@ if __name__ == "__main__":
     bst = xgb.train(
         param,
         dtrain,
-        num_boost_round=10,
+        num_boost_round=2000,
         evals=[(dtrain, "Train"), (dvalid, "Validation")],
-        early_stopping_rounds=2,
+        early_stopping_rounds=100,
     )
