@@ -9,11 +9,11 @@ spec:
   predictors:
     - componentSpecs:
         - hpaSpec:
-            maxReplicas: 30
+            maxReplicas: 5
             metrics:
               - resource:
                   name: cpu
-                  targetAverageUtilization: 50
+                  targetAverageUtilization: 55
                 type: Resource
             minReplicas: 1
           spec:
@@ -56,6 +56,9 @@ spec:
                   privileged: true
                   runAsUser: 0
                   runAsGroup: 0
+                resources:
+                  limits:
+                    cpu: "1"
 
               - name: model-2
                 image: seldonio/xgboostserver:1.14.0
@@ -67,9 +70,15 @@ spec:
                   privileged: true
                   runAsUser: 0
                   runAsGroup: 0
+                resources:
+                  limits:
+                    cpu: "1"
 
               - name: combiner
                 image: hahajong/combiner:0.2
+                resources:
+                  limits:
+                    cpu: "0.5"
 
       graph:
         children:
