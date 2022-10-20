@@ -1,0 +1,98 @@
+apiVersion: machinelearning.seldon.io/v1
+kind: SeldonDeployment
+metadata:
+  name: startup-pj
+  namespace: seldon-deploy
+spec:
+  replicas: 1
+  name: ensemble-deployment
+  predictors:
+    - componentSpecs:
+        - spec:
+            volumes:
+              - name: model-provision-location
+                emptyDir: {}
+            initContainers:
+              - name: model-initializer-1
+                image: kfserving/storage-initializer:v0.6.1
+                args:
+                  - "s3://team06/mlflow/mlflow/artifacts/0/280e52c2bc8f44199544c43d9f82970a/artifacts/model"
+                  - "/mnt/models/model-1"
+                volumeMounts:
+                  - mountPath: /mnt/models/model-1
+                    name: model-provision-location
+                envFrom:
+                  - secretRef:
+                      name: seldon-init-container-secret
+
+              - name: model-initializer-2
+                image: kfserving/storage-initializer:v0.6.1
+                args:
+                  - "s3://team06/mlflow/mlflow/artifacts/0/7e5191ca58d64151b1362b28ac911b47/artifacts/model"
+                  - "/mnt/models/model-2"
+                volumeMounts:
+                  - mountPath: /mnt/models/model-2
+                    name: model-provision-location
+                envFrom:
+                  - secretRef:
+                      name: seldon-init-container-secret
+
+            containers:
+              - name: model-1
+                image: seldonio/xgboostserver:1.14.0
+                volumeMounts:
+                  - mountPath: /mnt/models/model-1
+                    name: model-provision-location
+                    readOnly: true
+                securityContext:
+                  privileged: true
+                  runAsUser: 0
+                  runAsGroup: 0
+
+              - name: model-2
+                image: seldonio/xgboostserver:1.14.0
+                volumeMounts:
+                  - mountPath: /mnt/models/model-2
+                    name: model-provision-location
+                    readOnly: true
+                securityContext:
+                  privileged: true
+                  runAsUser: 0
+                  runAsGroup: 0
+
+              - name: combiner
+                image: hahajong/combiner:0.2
+
+              - name: inputtransformer
+                image: hahajong/inputtransformer:0.3
+
+      graph:
+        children:
+          - children:
+              - children: []
+                name: model-1
+                type: MODEL
+                parameters:
+                  - name: model_uri
+                    type: STRING
+                    value: "/mnt/models/model-1"
+                endpoint:
+                  type: REST
+              - children: []
+                name: model-2
+                type: MODEL
+                parameters:
+                  - name: model_uri
+                    type: STRING
+                    value: "/mnt/models/model-2"
+                endpoint:
+                  type: REST
+            name: combiner
+            type: COMBINER
+            endpoint:
+              type: REST
+        name: inputtransformer
+        type: TRANSFORMER
+        endpoint:
+          type: REST
+      name: ensemble-deployment
