@@ -24,9 +24,10 @@ def load_data_from_s3() -> pd.DataFrame:
     object_key = "/".join(["data", md5[:2], md5[2:]])
     object_ = s3_client.get_object(Bucket=BUCKET_NAME, Key=object_key)
     print(
-        "*" * 40,
+        "*" * 50,
+        "Load data from S3 ...",
         f"Bucket name: {BUCKET_NAME} \nObject key: {object_key}",
-        "*" * 40,
+        "*" * 50,
         sep="\n",
     )
     df = pd.read_parquet(io.BytesIO(object_["Body"].read()))
@@ -97,3 +98,25 @@ def rename_model_on_s3() -> None:
         Key=new_file_key,
     )
     s3_client.delete_object(Bucket=BUCKET_NAME, Key=old_file_key)
+
+
+def load_model_from_s3() -> bytearray:
+    mlflow_client = MlflowClient("http://13.124.36.34:5000/")
+    run_info = mlflow_client.search_runs("0")[0]
+    run_id = run_info.info.run_id
+    print(run_id)
+    s3_client = boto3.client(
+        "s3",
+    )
+    BUCKET_NAME = "team06"
+    object_key = "mlflow/mlflow/artifacts/0/" + run_id + "/artifacts/model/model.bst"
+    object_ = s3_client.get_object(Bucket=BUCKET_NAME, Key=object_key)
+    print(
+        "*" * 50,
+        "Load model from S3 ...",
+        f"Bucket name: {BUCKET_NAME} \nObject key: {object_key}",
+        "*" * 50,
+        sep="\n",
+    )
+    model = bytearray(object_["Body"].read())
+    return model
