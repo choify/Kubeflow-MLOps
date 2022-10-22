@@ -16,7 +16,7 @@ spec:
               - name: model-initializer-1
                 image: kfserving/storage-initializer:v0.6.1
                 args:
-                  - "s3://team06/mlflow/mlflow/artifacts/0/280e52c2bc8f44199544c43d9f82970a/artifacts/model"
+                  - "s3://team06/mlflow/mlflow/artifacts/0/00eac01d95a746a88c619e15301bd0a2/artifacts/model"
                   - "/mnt/models/model-1"
                 volumeMounts:
                   - mountPath: /mnt/models/model-1
@@ -28,7 +28,7 @@ spec:
               - name: model-initializer-2
                 image: kfserving/storage-initializer:v0.6.1
                 args:
-                  - "s3://team06/mlflow/mlflow/artifacts/0/7e5191ca58d64151b1362b28ac911b47/artifacts/model"
+                  - "s3://team06/mlflow/mlflow/artifacts/0/00eac01d95a746a88c619e15301bd0a2/artifacts/model"
                   - "/mnt/models/model-2"
                 volumeMounts:
                   - mountPath: /mnt/models/model-2
@@ -38,7 +38,7 @@ spec:
                       name: seldon-init-container-secret
 
             containers:
-              - name: model-1
+              - name: year-trained-model
                 image: seldonio/xgboostserver:1.14.0
                 volumeMounts:
                   - mountPath: /mnt/models/model-1
@@ -49,7 +49,7 @@ spec:
                   runAsUser: 0
                   runAsGroup: 0
 
-              - name: model-2
+              - name: new-model
                 image: seldonio/xgboostserver:1.14.0
                 volumeMounts:
                   - mountPath: /mnt/models/model-2
@@ -70,7 +70,7 @@ spec:
         children:
           - children:
               - children: []
-                name: model-1
+                name: year-trained-model
                 type: MODEL
                 parameters:
                   - name: model_uri
@@ -79,7 +79,7 @@ spec:
                 endpoint:
                   type: REST
               - children: []
-                name: model-2
+                name: new-model
                 type: MODEL
                 parameters:
                   - name: model_uri
