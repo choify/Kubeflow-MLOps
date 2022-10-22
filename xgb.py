@@ -61,6 +61,7 @@ if __name__ == "__main__":
             early_stopping_rounds=100,
         )
     else:
+        print("older model loaded from s3 ...")
         model = load_model_from_s3()
         bst = xgb.train(
             param,
