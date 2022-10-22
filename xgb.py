@@ -33,7 +33,7 @@ if __name__ == "__main__":
     X = data.copy()
     del data
 
-    train_X, valid_X, train_y, valid_y = train_test_split(X, y, test_size=0.2)
+    train_X, valid_X, train_y, valid_y = train_test_split(X, y, test_size=0.2, random_state=42)
 
     dtrain = xgb.DMatrix(train_X, train_y)
     dvalid = xgb.DMatrix(valid_X, valid_y)
