@@ -33,7 +33,9 @@ if __name__ == "__main__":
     X = data.copy()
     del data
 
-    train_X, valid_X, train_y, valid_y = train_test_split(X, y, test_size=0.2, random_state=42)
+    train_X, valid_X, train_y, valid_y = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
 
     dtrain = xgb.DMatrix(train_X, train_y)
     dvalid = xgb.DMatrix(valid_X, valid_y)
@@ -56,9 +58,9 @@ if __name__ == "__main__":
         bst = xgb.train(
             param,
             dtrain,
-            num_boost_round=2000,
+            num_boost_round=10,
             evals=[(dtrain, "Train"), (dvalid, "Validation")],
-            early_stopping_rounds=100,
+            early_stopping_rounds=2,
         )
     else:
         print("older model loaded from s3 ...")
@@ -66,8 +68,8 @@ if __name__ == "__main__":
         bst = xgb.train(
             param,
             dtrain,
-            num_boost_round=2000,
+            num_boost_round=10,
             evals=[(dtrain, "Train"), (dvalid, "Validation")],
-            early_stopping_rounds=100,
+            early_stopping_rounds=2,
             xgb_model=model,
         )
