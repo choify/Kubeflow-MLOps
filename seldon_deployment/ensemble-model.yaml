@@ -48,6 +48,21 @@ spec:
                   privileged: true
                   runAsUser: 0
                   runAsGroup: 0
+                env:
+                  - name: MODEL_METADATA
+                    value: |
+                      ---
+                      name: model
+                      inputs:
+                      - messagetype: ndarray
+                        schema:
+                          names: [passenger_count, trip_distance, PULocationID, DOLocationID,payment_type, dayofweek, hour, minutes, time_diff]
+                          shape: [ 8 ]
+                      outputs:
+                      - messagetype: ndarray
+                        schema:
+                          names: [fare-amount]
+                          shape: [ 1 ]
 
               - name: new-model
                 image: seldonio/xgboostserver:1.14.0
@@ -59,12 +74,57 @@ spec:
                   privileged: true
                   runAsUser: 0
                   runAsGroup: 0
+                env:
+                  - name: MODEL_METADATA
+                    value: |
+                      ---
+                      name: model
+                      inputs:
+                      - messagetype: ndarray
+                        schema:
+                          names: [passenger_count, trip_distance, PULocationID, DOLocationID,payment-type, dayofweek, hour, minutes, time_diff]
+                          shape: [ 8 ]
+                      outputs:
+                      - messagetype: ndarray
+                        schema:
+                          names: [fare-amount]
+                          shape: [ 1 ]
 
               - name: combiner
                 image: hahajong/combiner:0.2
+                env:
+                  - name: MODEL_METADATA
+                    value: |
+                      ---
+                      name: ensemble
+                      inputs:
+                      - messagetype: ndarray
+                        schema:
+                          names: [ensemble-input]
+                          shape: [ 1 ]
+                      outputs:
+                      - messagetype: ndarray
+                        schema:
+                          names: [ensemble-output]
+                          shape: [ 1 ]
 
               - name: inputtransformer
                 image: hahajong/inputtransformer:0.3
+                env:
+                  - name: MODEL_METADATA
+                    value: |
+                      ---
+                      name: preprocessor
+                      inputs:
+                      - messagetype: ndarray
+                        schema:
+                          names: [passenger_count, trip_distance, PULocation, DOLocation, payment_type, PUdatetime, time_diff]
+                          shape: [ 7 ]
+                      outputs:
+                      - messagetype: ndarray
+                        schema:
+                          names: [passenger_count, trip_distance, PULocationID, DOLocationID, payment_type, dayofweek, hour, minutes, time_diff]
+                          shape: [ 8 ]
 
       graph:
         children:
@@ -95,4 +155,4 @@ spec:
         type: TRANSFORMER
         endpoint:
           type: REST
-      name: ensemble-deployment	
+      name: ensemble-deployment
