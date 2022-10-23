@@ -28,7 +28,7 @@ spec:
               - name: model-initializer-2
                 image: kfserving/storage-initializer:v0.6.1
                 args:
-                  - "s3://team06/mlflow/mlflow/artifacts/0/c73526d29eac48fd84b1b209a37f9d03/artifacts/model"
+                  - "s3://team06/mlflow/mlflow/artifacts/0/7f7b87760fe54480a6c2c6e330d8aa9d/artifacts/model"
                   - "/mnt/models/model-2"
                 volumeMounts:
                   - mountPath: /mnt/models/model-2
