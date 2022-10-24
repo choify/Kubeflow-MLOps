@@ -4,7 +4,12 @@ import xgboost as xgb
 import mlflow
 import mlflow.xgboost
 
-from utils import reduce_mem_usage, load_data_from_s3, rename_model_on_s3
+from utils import (
+    reduce_mem_usage,
+    load_data_from_s3,
+    rename_model_on_s3,
+    load_model_from_s3,
+)
 
 
 def parse_args():
@@ -47,8 +52,10 @@ if __name__ == "__main__":
         "reg_lambda": args.reg_lambda,
         "objective": "reg:squarederror",
     }
+    # model = load_model_from_s3()
     mlflow.set_tracking_uri("http://13.124.36.34:5000/")
     mlflow.set_experiment(experiment_id="0")
+
     with mlflow.start_run():
         mlflow.xgboost.autolog(log_input_examples=True)
         dtrain = xgb.DMatrix(train_X, train_y)
@@ -56,9 +63,10 @@ if __name__ == "__main__":
         bst = xgb.train(
             param,
             dtrain,
-            num_boost_round=1500,
+            num_boost_round=2000,
             evals=[(dtrain, "Train"), (dvalid, "Validation")],
-            early_stopping_rounds=50,
+            early_stopping_rounds=1,
+            # xgb_model=model,
         )
     with open("run_id.txt", "w") as f:
         new_run_id = mlflow.last_active_run().info.run_id

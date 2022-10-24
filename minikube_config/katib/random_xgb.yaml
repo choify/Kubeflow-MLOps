@@ -1,0 +1,119 @@
+apiVersion: kubeflow.org/v1beta1
+kind: Experiment
+metadata:
+  namespace: kubeflow-user-example-com
+  generateName: random-year-
+spec:
+  metricsCollectorSpec:
+    collector:
+      kind: StdOut
+    source:
+      filter:
+        metricsFormat:
+          - "([\\w|-]+)\\s*:\\s*([+-]?\\d*(\\.\\d+)?([Ee][+-]?\\d+)?)"
+  objective:
+    type: minimize
+    goal: 0.99
+    objectiveMetricName: Validation-rmse
+    additionalMetricNames:
+      - Train-rmse
+  algorithm:
+    algorithmName: random
+  parallelTrialCount: 1
+  maxTrialCount: 60
+  maxFailedTrialCount: 3
+  parameters:
+    - name: eta
+      parameterType: double
+      feasibleSpace:
+        min: "0.01"
+        max: "0.3"
+    - name: gamma
+      parameterType: double
+      feasibleSpace:
+        min: "0.0"
+        max: "8.0"
+    - name: max-depth
+      parameterType: int
+      feasibleSpace:
+        min: "4"
+        max: "8"
+    - name: min-child-weight
+      parameterType: double
+      feasibleSpace:
+        min: "0.0"
+        max: "8.0"
+    - name: subsample
+      parameterType: double
+      feasibleSpace:
+        min: "0.0"
+        max: "1.0"
+    - name: colsample-bytree
+      parameterType: double
+      feasibleSpace:
+        min: "0.0"
+        max: "1.0"
+    - name: reg-alpha
+      parameterType: double
+      feasibleSpace:
+        min: "0.0"
+        max: "9.0"
+    - name: reg-lambda
+      parameterType: double
+      feasibleSpace:
+        min: "1.0"
+        max: "1.5"
+  trialTemplate:
+    primaryContainerName: training-container
+    trialParameters:
+      - name: learningRate
+        description: Learning rate for the training model
+        reference: eta
+      - name: gamma
+        description: reg
+        reference: gamma
+      - name: maxDepth
+        description: reg
+        reference: max-depth
+      - name: minChildWeight
+        description: reg
+        reference: min-child-weight
+      - name: subsample
+        description: reg
+        reference: subsample
+      - name: colsampleBytree
+        description: reg
+        reference: colsample-bytree
+      - name: regAlpha
+        description: reg
+        reference: reg-alpha
+      - name: regLambda
+        description: reg
+        reference: reg-lambda
+    trialSpec:
+      apiVersion: batch/v1
+      kind: Job
+      spec:
+        template:
+          metadata:
+            annotations:
+              sidecar.istio.io/inject: "false"
+          spec:
+            containers:
+              - name: training-container
+                image: hahajong/xgb-katib:year-data
+                command:
+                  - "python"
+                  - "/app/xgb.py"
+                  - "--eta=${trialParameters.learningRate}"
+                  - "--gamma=${trialParameters.gamma}"
+                  - "--max-depth=${trialParameters.maxDepth}"
+                  - "--min-child-weight=${trialParameters.minChildWeight}"
+                  - "--subsample=${trialParameters.subsample}"
+                  - "--colsample-bytree=${trialParameters.colsampleBytree}"
+                  - "--reg-alpha=${trialParameters.regAlpha}"
+                  - "--reg-lambda=${trialParameters.regLambda}"
+                envFrom:
+                  - secretRef:
+                      name: s3-credential
+            restartPolicy: Never

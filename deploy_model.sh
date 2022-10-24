@@ -8,7 +8,6 @@ if [[ $experiment_name =~ $EXPERIMENT_REGEX ]]; then
     set +o pipefail +e
     git checkout dev
     git pull origin dev
-    rm .dvc/cache -rf
     declare -A params_dict
     x=0
     while [ $x -le 7 ];
@@ -28,10 +27,10 @@ if [[ $experiment_name =~ $EXPERIMENT_REGEX ]]; then
     --reg-alpha=${params_dict[reg-alpha]} \
     --reg-lambda=${params_dict[reg-lambda]}
 
-    old_run_id=$(cat seldon_deployment/mlflow-model-serving.yaml | grep s3 | cut -d "/" -f 8)
+    old_run_id=$(cat seldon_deployment/ensemble-model.yaml | grep s3 | tail -n 1 | cut -d "/" -f 8)
     new_run_id=$(cat run_id.txt)
 
-    sed -i "s/$old_run_id/$new_run_id/" seldon_deployment/mlflow-model-serving.yaml
+    sed -i "s/$old_run_id/$new_run_id/" seldon_deployment/ensemble-model.yaml
 
     git add seldon_deployment/ensemble-model.yaml && git commit -m "chage model path" && git push origin dev
 else
