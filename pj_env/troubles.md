@@ -46,5 +46,18 @@
 # Seldon core
 - 학습이 완료된 특정 모델을 불러와 배포하기 위해서는 모델을 불러올 initcontainer와 모델을 배포할 container를 둘다 정의해야 한다.
 - container에는 직접 이미지를 빌드할 수도 있으나 보통 seldon core에서 제공하는 server를 사용한다. 본 프로젝트에서는 xgboost를 사용했기 때문에 xgboost server를 사용했다.
+- 전처리기를 이용하여 들어오는 데이터를 전처리 하였다.
+- combiner를 이용하여 모델을 앙상블 하였다.
 ## 발생한 문제와 해결
 - xgboost server의 경우에는 모델명이 꼭 `.bst` 로 끝나야 한다. 그런데 mlflow의 autolog 를 사용하면 해당 모델은 `model.xgb`로 저장되기 때문에 s3에 올라가 있는 모델의 이름을 변경해야하는 작업이 필요했다. 
+## 미해결 문제
+- locust를 활용해 auto scaling이 가능한지 확인하려 했으나 맘대로 잘 되지 않았다. 서버 부하를 늘리면 그대로 서버가 터져버리기 일쑤였다. 
+- 만든 모델로 inference를 수행하는 경우여서 그런 것인지, 전처리기와 combiner를 사용해서 네트워크를 거치기 때문에 해당 부분에서 병목현상이 발생하게 되는 것인지 잘 알 수 없었다.
+- 그러나 inference를 담당하는 pod의 리소스 소모가 급격하게 증가하는 것으로 보아 inference를 수행하는 부분에 문제가 있는 듯 싶다.
+- autoscale이 되지 않는다 하더라도 replica가 여러개인 경우에 load가 분산될 줄 알았는데 그렇지도 않았고 traffic을 나눠도 제대로 되지 않았다. seldon core에서 load balancing 하는 부분을 다시 봐야할 것 같다.
+
+# Promethus, Grafana
+- 서버 메트릭과 모델 메트릭을 측정하기 위하여 사용했다.
+## 미해결 문제
+- promQL을 알지 못하여서 모델 API에서 어떤 값을 불러와야 모델 메트릭을 측정할 수 있는지 알지 못하였다. 그래서 model metric을 측정하는 것을 수행하지는 못하였다.
+- 서버 메트릭의 경우에도 inference를 많이 요청하는 경우 500번대 에러가 발생하는 경우가 꽤 있었는데 해당 에러를 잡지 못하는 문제가 있었다. 이 또한 promQL과 grafana dashboard를 작성하는 법을 알아야 해결할 수 있을 것 같다.
