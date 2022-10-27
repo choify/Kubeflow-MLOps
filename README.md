@@ -14,7 +14,11 @@
 
 ![최종 아키텍처](/images/final_architecture.png)
 
-# 타임라인
+# 타임 라인
+
+<details>
+<summary>세부 내용</summary>
+<div markdown="1">
 
 ## 기획안(09/05 ~ 09/23)
 
@@ -74,7 +78,8 @@
 ### 문제점
 - [Seldon core 미해결 문제](/pj_env/troubles.md#seldon-core)
 - [Prometheus 미해결 문제](/pj_env/troubles.md#promethus-grafana)
-
+</div>
+</details>
 
 ## 프로젝트 진행 시 문제점
 - CI/CD 툴에 대한 사용 경험 없음
