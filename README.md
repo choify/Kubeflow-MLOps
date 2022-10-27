@@ -18,7 +18,7 @@
 
 ### 문제점
 - [[https://github.com/Hahajongsoo/startup-progject-demo/blob/dev/pj_env/troubles.md#mlflow|MLflow 설정시 발생한 문제]]
-- [[https://github.com/Hahajongsoo/startup-progject-demo/blob/dev/pj_env/troubles.md#jenkins|Jenkins 사용시 발생한 문제]]
+- [Jenkins 사용시 발생한 문제](https://github.com/Hahajongsoo/startup-progject-demo/blob/dev/pj_env/troubles.md#jenkins)
 - [[troubles#Argo CD|Argo CD 사용시 발생한 문제]]
 
 ## 중간 발표(09/26~10/07)
