@@ -5,9 +5,12 @@
 - 기간 : 2022/09/05 ~ 2022/10/21
 - 역할 : 구글에서 정의한 MLOps level 2를 만족하는 MLOps 파이프라인 구축
 
-[기획안](https://docs.google.com/presentation/d/1g8TlGWvKnN1AuEqA5nkjA-NIPwLQYDyk/edit?usp=sharing&ouid=118253427836564636716&rtpof=true&sd=true)
-[중간 발표](https://docs.google.com/presentation/d/1m8EF5LbnHuOY3mnhSsFTEKkyB3cQIyCe/edit?usp=sharing&ouid=118253427836564636716&rtpof=true&sd=true)
-[최종 발표](https://docs.google.com/presentation/d/1BbtlxzXMZAAFppnBjJYfnrecRzcd9GTB/edit?usp=sharing&ouid=118253427836564636716&rtpof=true&sd=true)
+## 발표 자료
+- [기획안](https://docs.google.com/presentation/d/1g8TlGWvKnN1AuEqA5nkjA-NIPwLQYDyk/edit?usp=sharing&ouid=118253427836564636716&rtpof=true&sd=true)
+- [중간 발표](https://docs.google.com/presentation/d/1m8EF5LbnHuOY3mnhSsFTEKkyB3cQIyCe/edit?usp=sharing&ouid=118253427836564636716&rtpof=true&sd=true)
+- [최종 발표](https://docs.google.com/presentation/d/1BbtlxzXMZAAFppnBjJYfnrecRzcd9GTB/edit?usp=sharing&ouid=118253427836564636716&rtpof=true&sd=true)
+
+# 타임라인
 
 ## 기획안(09/05 ~ 09/23)
 
@@ -24,7 +27,24 @@
 ## 중간 발표(09/26~10/07)
 
 ### 진행 작업
-- 
+- 두 개의 자동화 라인을 구상함
+	1. 새로운 데이터가 올라오면 실험까지 자동화 하는 라인
+	2. 배포를 위한 모델 학습과 모델의 배포 까지 자동화 하는 라인
+- 1번 라인을 위해서 필요한 툴들 체크해봄
+	- DVC
+	- katib experiment 를 위한 image
+	- argo workflow
+	- argo event
+	- jenkins
+	- slack API
+- 2번 라인을 위해서 필요한 것
+	- mlflow
+	- seldon core
+	- argo cd
+	- prometheus
+	- grafana
+
+### 문제점
 
 
 ## 프로젝트 진행 시 문제점
