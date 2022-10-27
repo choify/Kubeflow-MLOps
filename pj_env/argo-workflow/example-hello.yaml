@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: hello-world-  # generateName을 사용하면 hello-world-xxxx-xxxx
+  namespace: argo
+spec:
+  entrypoint: whalesay  # 시작 할 templates을 지정합니다.
+  templates:
+  - name: whalesay
+    container:
+      image: docker/whalesay:latest
+      command: [cowsay]
+      args: ["hello world"]

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: mlflow-system
+  name: mlflow-server
+  labels:
+    app.kubernetes.io/name: mlflow-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mlflow-server
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mlflow-server
+    spec:
+      containers:
+        - name: mlflow-server
+          image: "hahajong/mlflow-server:latest"
+          imagePullPolicy: "IfNotPresent"
+          envFrom:
+            - secretRef:
+                name: s3-credential
+          ports:
+            - containerPort: 5000
+              name: http
+              protocol: TCP
+          resources: {}
