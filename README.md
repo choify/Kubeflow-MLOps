@@ -17,8 +17,8 @@
 -  CI/CD 툴을 사용해본 적이 없기 때문에 Jenkins와 Argo CD를 이용한 CI/CD 환경을 구축해봄(ml 파이프라인에 적용해보지는 않고 되는지만 확인해봄)
 
 ### 문제점
-- [[troubles#MLflow|MLflow 설정시 발생한 문제]]
-- [[troubles#Jenkins|Jenkins 사용시 발생한 문제]]
+- [[https://github.com/Hahajongsoo/startup-progject-demo/blob/dev/pj_env/troubles.md#mlflow|MLflow 설정시 발생한 문제]]
+- [[https://github.com/Hahajongsoo/startup-progject-demo/blob/dev/pj_env/troubles.md#jenkins|Jenkins 사용시 발생한 문제]]
 - [[troubles#Argo CD|Argo CD 사용시 발생한 문제]]
 
 ## 중간 발표(09/26~10/07)
