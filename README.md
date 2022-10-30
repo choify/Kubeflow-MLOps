@@ -14,6 +14,22 @@
 
 ![최종 아키텍처](/images/final_architecture.png)
 
+## 프로젝트 결과
+
+### 새로운 데이터 올라올 시 학습까지 자동화
+
+![1](/images/project_result_1.gif)
+
+![2](/images/project_result_2.gif)
+
+### 새로운 모델 학습부터 배포까지 자동화
+
+![3](/images/project_result_3.gif)
+
+### 배포된 모델과 모니터링
+
+![4](/images/project_result_4.gif)
+
 # 타임 라인
 
 <details>
