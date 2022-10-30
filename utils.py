@@ -13,20 +13,21 @@ def load_data_from_s3() -> pd.DataFrame:
     Returns:
         loaded data as pandas.DataFrame
     """
-    with open("data/yellow_tripdata_2017-01.parquet.dvc", "r") as f:
+    with open("data/train_data.parquet.dvc", "r") as f:
         file = f.readlines()
     md5 = file[1].split(" ")[-1][:-1]
 
     s3_client = boto3.client(
         "s3",
     )
-    BUCKET_NAME = "hajong-data"
+    BUCKET_NAME = "team06"
     object_key = "/".join(["data", md5[:2], md5[2:]])
     object_ = s3_client.get_object(Bucket=BUCKET_NAME, Key=object_key)
     print(
-        "*" * 40,
+        "*" * 50,
+        "Load data from S3 ...",
         f"Bucket name: {BUCKET_NAME} \nObject key: {object_key}",
-        "*" * 40,
+        "*" * 50,
         sep="\n",
     )
     df = pd.read_parquet(io.BytesIO(object_["Body"].read()))
@@ -81,43 +82,6 @@ def reduce_mem_usage(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def preprocessing(data: pd.DataFrame) -> pd.DataFrame:
-    """
-    return preprocessed data by using drop cols, making new cols etc.
-    Args:
-        data: data to preprocess
-    Returns:
-        preporcessed data as pandas.DataFrame
-    """
-    data.drop(
-        [
-            "VendorID",
-            "store_and_fwd_flag",
-            "extra",
-            "mta_tax",
-            "tip_amount",
-            "tolls_amount",
-            "improvement_surcharge",
-            "total_amount",
-            "congestion_surcharge",
-            "airport_fee",
-        ],
-        axis=1,
-        inplace=True,
-    )
-    ol = data.loc[(data.fare_amount > 500000)].index
-    data.drop(ol, inplace=True)
-    data["drive_time_diff"] = (
-        data["tpep_dropoff_datetime"] - data["tpep_pickup_datetime"]
-    ) / np.timedelta64(1, "s")
-    data.drop(columns=["tpep_dropoff_datetime", "tpep_pickup_datetime"], inplace=True)
-    # category_cols = ["RatecodeID", "PULocationID", "DOLocationID", "payment_type"]
-    # for col in category_cols:
-    #     data[col] = data[col].astype("category")
-    data.dropna(axis=0, inplace=True)
-    return data
-
-
 def rename_model_on_s3() -> None:
     mlflow_client = MlflowClient("http://13.124.36.34:5000/")
     run_info = mlflow_client.search_runs("0")[0]
@@ -125,7 +89,7 @@ def rename_model_on_s3() -> None:
     s3_client = boto3.client(
         "s3",
     )
-    BUCKET_NAME = "hajong-data"
+    BUCKET_NAME = "team06"
     old_file_key = "mlflow/mlflow/artifacts/0/" + run_id + "/artifacts/model/model.xgb"
     new_file_key = "mlflow/mlflow/artifacts/0/" + run_id + "/artifacts/model/model.bst"
     s3_client.copy_object(
@@ -134,3 +98,25 @@ def rename_model_on_s3() -> None:
         Key=new_file_key,
     )
     s3_client.delete_object(Bucket=BUCKET_NAME, Key=old_file_key)
+
+
+def load_model_from_s3() -> bytearray:
+    mlflow_client = MlflowClient("http://13.124.36.34:5000/")
+    run_info = mlflow_client.search_runs("0")[0]
+    run_id = run_info.info.run_id
+    print(run_id)
+    s3_client = boto3.client(
+        "s3",
+    )
+    BUCKET_NAME = "team06"
+    object_key = "mlflow/mlflow/artifacts/0/" + run_id + "/artifacts/model/model.bst"
+    object_ = s3_client.get_object(Bucket=BUCKET_NAME, Key=object_key)
+    print(
+        "*" * 50,
+        "Load model from S3 ...",
+        f"Bucket name: {BUCKET_NAME} \nObject key: {object_key}",
+        "*" * 50,
+        sep="\n",
+    )
+    model = bytearray(object_["Body"].read())
+    return model

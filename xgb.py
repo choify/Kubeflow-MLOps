@@ -1,10 +1,10 @@
 import argparse
 import xgboost as xgb
 from sklearn.model_selection import train_test_split
+from mlflow import MlflowClient
 
-# import mlflow
 
-from utils import load_data_from_s3, preprocessing, reduce_mem_usage
+from utils import load_data_from_s3, reduce_mem_usage, load_model_from_s3
 
 
 def parse_args():
@@ -28,7 +28,7 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
 
-    data = reduce_mem_usage(preprocessing(load_data_from_s3()))
+    data = reduce_mem_usage(load_data_from_s3())
     y = data.pop("fare_amount")
     X = data.copy()
     del data
@@ -37,9 +37,9 @@ if __name__ == "__main__":
         X, y, test_size=0.2, random_state=42
     )
 
-    # mlflow.xgboost.autolog(log_input_examples=True)
     dtrain = xgb.DMatrix(train_X, train_y)
     dvalid = xgb.DMatrix(valid_X, valid_y)
+
     # specify parameters via map
     param = {
         "eta": args.eta,
@@ -52,10 +52,24 @@ if __name__ == "__main__":
         "reg_lambda": args.reg_lambda,
         "objective": "reg:squarederror",
     }
-    bst = xgb.train(
-        param,
-        dtrain,
-        num_boost_round=10,
-        evals=[(dtrain, "Train"), (dvalid, "Validation")],
-        early_stopping_rounds=2,
-    )
+
+    mlflow_client = MlflowClient("http://13.124.36.34:5000/")
+    if len(mlflow_client.search_runs("0")) == 0:
+        bst = xgb.train(
+            param,
+            dtrain,
+            num_boost_round=10,
+            evals=[(dtrain, "Train"), (dvalid, "Validation")],
+            early_stopping_rounds=2,
+        )
+    else:
+        print("older model loaded from s3 ...")
+        model = load_model_from_s3()
+        bst = xgb.train(
+            param,
+            dtrain,
+            num_boost_round=2000,
+            evals=[(dtrain, "Train"), (dvalid, "Validation")],
+            early_stopping_rounds=100,
+            xgb_model=model,
+        )
